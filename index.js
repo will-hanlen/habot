@@ -22,7 +22,7 @@ dotenv.config()
 const client = new Client();
 
 // Settings
-const PREFIX = "#"
+const PREFIX = "!"
 const LOGGING = false
 
 // Start the discort bot
