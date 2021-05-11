@@ -70,11 +70,12 @@ client.on('message', msg => {
     // Find the correct handler or use the unknownCommand handler
     const matchedCommand = findCommand(command)
 
-    msg.react(reactions[matchedCommand?.reaction || "robot"])
+    const reaction = matchedCommand && matchedCommand.reaction
+    msg.react(reactions[reaction || "robot"])
 
     // Hanlde the command and send the response
     const handler = matchedCommand.handler
-    const dest = matchedCommand?.alwaysDM ? msg.author : msg.channel
+    const dest = (matchedCommand && matchedCommand.alwaysDM) ? msg.author : msg.channel
 
     try {
         const params = parser(args, matchedCommand.regex)
