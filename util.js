@@ -39,7 +39,7 @@ function progressMeter(goal) {
 
     if (recurring) {
 
-        console.log(`\n\n${goal.name}`)
+        // console.log(`\n\n${goal.name}`)
 
         const daysInPeriod = dii(goal.interval) * (goal.frequency || 1)
 
@@ -87,8 +87,6 @@ function progressMeter(goal) {
         if (!periods.length) return "no progress data yet"
 
         const thisPeriod = periods.shift()
-
-        console.log(new Date().toISOString(), thisPeriod)
 
         const thisPeriodString = `${thisPeriod.done}/${goal.count} ` +
               `${goal.name} completed this ${goal.interval}`
