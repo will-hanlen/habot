@@ -96,12 +96,18 @@ function progressMeter(goal) {
               `${finishedPeriods.complete}/${periods.length} successful` : ''
 
 
-        const daysLeft = (maxPossiblePeriods - periods.length - 1) * goal.interval
+        const intervalsLeft = maxPossiblePeriods - periods.length -1
+        const daysLeft = intervalsLeft * goal.interval
+
+        const timeLeft = (intervalsLeft == daysLeft) ?
+              `${daysLeft} days left in goal` :
+              `${daysLeft} days left in goal (${intervalsLeft} intervals)`
+
         const weeksLeft = `${maxPossiblePeriods - periods.length - 1} ` +
               `full intervals left after this one (${daysLeft} days)`
 
         return `\t${thisPeriodString}${allPeriodsString}` +
-            `\n\t${weeksLeft}`
+            `\n\t${timeLeft}`
     }
 
     const needed = goal.count
@@ -109,7 +115,10 @@ function progressMeter(goal) {
         return a + c.addend
     }, 0)
 
-    return `\t${done}/${needed} completed`
+    const daysLeft = Math.floor((new Date(goal.end) - Date.now()) / 86400000)
+    const timeLeft = `\n\t${daysLeft} days left in goal`
+
+    return `\t${done}/${needed} completed` + timeLeft
 }
 
 module.exports = { stringifyGoal }
