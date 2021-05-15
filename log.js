@@ -5,19 +5,19 @@ const queryTemplate = `
 mutation logProgress(
   $addend: Int!
   $date: timestamptz!
-  $name: String!
+  $activity: String!
   $user: String!
 ) {
   insert_log_one(object: {
     addend: $addend,
     date: $date,
-    name: $name,
+    activity: $activity,
     user: $user
   }) {
     date
     addend
     user
-    name
+    activity
     goal {
       user
       activity
@@ -39,15 +39,15 @@ const log = {
     regex: new RegExp([
         '^',
         '(?<addend>\\d+)? ?',
-        '(?<name>\\w+) ?',
+        '(?<activity>\\w+) ?',
         '(?:on (?<date>\\d{4}-\\d{2}-\\d{2}))?',
         '$'
     ].join('')),
     description: "Log progress on a goal",
-    syntax: "!@ [ADDEND] NAME [on DATE]",
+    syntax: "!@ [ADDEND] ACTIVITY [on DATE]",
     legend: [
         "[ADDEND] is the number of NAME that you did.  Defaults to 1.",
-        "NAME is the name of the goal you made progress on",
+        "ACTIVITY is the name of the goal you made progress on",
         "[DATE] is the date when you made the progress. Defaults to today.",
     ],
     examples: [
@@ -59,13 +59,13 @@ const log = {
 
         const {
             addend = 1,
-            name,
+            activity,
             date = new Date().toISOString(),
         } = args
 
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
-            "name": name,
+            "activity": activity,
             "addend": addend,
             "date": date,
         }, "logProgress")
