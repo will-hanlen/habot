@@ -3,20 +3,23 @@ const { APIcall } = require('./api')
 function stringifyGoal(data) {
 
     const user = data.user
-    const count = data.count ? `${data.count} ` : ''
-    const name = data.name ? `${data.name} ` : ''
-    const delim1 = data.delim1 ? `${data.delim1} ` : ''
-    const frequency = data.frequency ? `${data.frequency} ` : ''
-    const interval = data.interval ? `${data.interval} ` : ''
-    const delim2 = data.delim2 ? `${data.delim2} ` : ''
-    const end = prettyDate(data.end)
-    const start = ` starting ${prettyDate(data.start)}`
+    const activity = `**${data.activity}** `
+    const count = (data.count > 1) ? `x${data.count} ` : ''
+    const dayWord = (data.interval > 1) ? "days" : "day"
+    const intervalDisplay = (data.interval > 1) ? `${data.interval} ` : ''
+    const interval = (data.interval) ?
+          `\n\t${data.count} every ${intervalDisplay}${dayWord}`
+          : ''
+    const start = `\n\t[ ${prettyDate(data.start)} → `
+    const end = `${prettyDate(data.end)} ]`
 
-    const goal = count + name + delim1 + frequency + interval + delim2 + end + start
+    const dates = start + end
+
+    const goal = activity + interval
 
     const progress = progressMeter(data)
 
-    return goal + "\n" + progress
+    return goal + "\n" + progress + dates
 
 }
 
@@ -28,20 +31,13 @@ function prettyDate(date) {
     return `${year}-${month}-${day}`
 }
 
-function dii(interval) {
-    if (interval == "day") return 1
-    if (interval == "week") return 7
-    if (interval == "month") return 30
-}
-
 function progressMeter(goal) {
-    const recurring = goal.delim1 // whether goal has an interval clause
+    const recurring = goal.interval // whether goal has an interval clause
 
     if (recurring) {
+        const dayWord = (goal.interval > 1) ? "days" : "day"
 
-        // console.log(`\n\n${goal.name}`)
-
-        const daysInPeriod = dii(goal.interval) * (goal.frequency || 1)
+        const daysInPeriod = goal.interval
 
         const msInPeriod = daysInPeriod * 86400000
 
@@ -70,7 +66,7 @@ function progressMeter(goal) {
             })
 
             const done = periodLogs.reduce((a, c) => {
-                return a + c.count
+                return a + c.addend
             }, 0)
 
             periods.unshift({
@@ -89,26 +85,28 @@ function progressMeter(goal) {
         const thisPeriod = periods.shift()
 
         const thisPeriodString = `${thisPeriod.done}/${goal.count} ` +
-              `${goal.name} completed this ${goal.interval}`
+              `completed this interval`
 
         const finishedPeriods = periods.reduce((a, c) => {
             if (c.done >= goal.count) return {...a, complete: a.complete + 1}
             return {...a, missed: a.missed + 1}
         }, { missed: 0, complete: 0 })
 
-        const allPeriodsString = `Previous ${goal.interval}s: ` +
-              `${finishedPeriods.complete}/${periods.length} successful`
+        const allPeriodsString = (periods.length) ? `\n\tPrevious intervals: ` +
+              `${finishedPeriods.complete}/${periods.length} successful` : ''
 
+
+        const daysLeft = (maxPossiblePeriods - periods.length - 1) * goal.interval
         const weeksLeft = `${maxPossiblePeriods - periods.length - 1} ` +
-              `full ${goal.interval}s left after this one`
+              `full intervals left after this one (${daysLeft} days)`
 
-        return `\t${thisPeriodString}\n\t${allPeriodsString}` +
+        return `\t${thisPeriodString}${allPeriodsString}` +
             `\n\t${weeksLeft}`
     }
 
     const needed = goal.count
     const done = goal.logs.reduce((a, c) => {
-        return a + c.count
+        return a + c.addend
     }, 0)
 
     return `\t${done}/${needed} completed`

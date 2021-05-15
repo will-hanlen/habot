@@ -6,8 +6,6 @@ A discord bot.
 
 ********/
 
-'use strict';
-
 const dotenv = require('dotenv')
 const { Client } = require('discord.js');
 
@@ -23,7 +21,6 @@ const client = new Client();
 
 // Settings
 const PREFIX = "!"
-const LOGGING = false
 
 // Start the discort bot
 client.on('ready', () => {
@@ -38,71 +35,51 @@ client.on('ready', () => {
         if (!e.legend) throw "Missing syntax"
         if (!e.examples) throw "Missing syntax"
     })
-    if (LOGGING) console.log("Ready!")
+    console.log("Server Ready!")
 });
 
-// Handle incoming bot commands
+// Parse incoming bot commands
 client.on('message', msg => {
-    if (LOGGING) send(msg, 'incoming', msg.content)
 
+    // Ensure message is to the bot
     if (!msg.content.startsWith(PREFIX) || msg.author.bot) return;
 
     // Parse out the command and args
     const input = msg.content.slice(PREFIX.length).trim()
-
-    if (LOGGING) send(msg, 'input', input)
 
     var firstSpace = input.indexOf(" ")
     if (firstSpace < 1) {
         firstSpace = input.length
     }
 
-    if (LOGGING) send(msg, 'firstSpace', firstSpace)
-
-    const arg0 = input.slice(0, firstSpace)
+    const arg0 = input.slice(0, firstSpace) || "help"
     const args = input.slice(firstSpace).trim()
 
-    if (LOGGING) msg.channel.send(`arg0: ${arg0}`)
-    if (LOGGING) msg.channel.send(`args: ${args}`)
+    // Match the first argument with a command
+    const command = commands.find(c => {
+        return c.command === arg0
+    })
 
-    const command = (arg0 == "") ? "help" : arg0
+    respond(msg, command, args).then(resp => {
+        msg.channel.send(resp)
+    }).catch(e => {
+        console.error(e)
+        msg.channel.send(errorify(e))
+    })
 
-    // Find the correct handler or use the unknownCommand handler
-    const matchedCommand = findCommand(command)
-
-    const reaction = matchedCommand && matchedCommand.reaction
-    msg.react(reactions[reaction || "robot"])
-
-    // Hanlde the command and send the response
-    const handler = matchedCommand.handler
-    const dest = (matchedCommand && matchedCommand.alwaysDM) ? msg.author : msg.channel
-
-    try {
-        const params = parser(args, matchedCommand.regex)
-        handler(msg, params)
-            .then(resp => dest.send(resp))
-            .catch(e => {
-                dest.send(errorify(e))
-            })
-    } catch (e) {
-        if (e instanceof SyntaxError) {
-            dest.send(hydrateError(matchedCommand, e))
-        }
-        else {
-            dest.send(errorify(e))
-        }
-    }
 });
 
-function send(msg, label, value) {
-    msg.channel.send(`${label}: ${value}`)
+async function respond(msg, command, args) {
+    if (!command) {
+        msg.react("❓")
+        throw "Unknown Command"
+    }
+    msg.react("🤖")
+
+    return await command.handler(msg, parser(args, command.regex))
 }
 
-// Command Validator
-
 function parser(args, regex) {
-
-    if (LOGGING) console.log(args, regex)
 
     const found = args.match(regex)
 
@@ -115,25 +92,6 @@ function parser(args, regex) {
 
 // Authenticate the bot
 client.login(process.env.TOKEN);
-
-// Utils
-
-const reactions = {
-    robot: "🤖",
-    error: "❓",
-}
-
-function findCommand(name) {
-    const command = commands.find(c => {
-        return c.command === name
-    })
-
-    // if (!command) throw `Command '${name}' not found`
-
-    if (!command) return help
-
-    return command
-}
 
 
 // Formatting
@@ -174,7 +132,7 @@ function hydrateSyntax(command) {
     const fullLegend = (legend.length) ? space(
         "WHERE:", legend, "(variables in brackets are optional)") : ""
 
-    return space("**SYNTAX**", syntax, fullLegend)
+    return space(syntax, fullLegend)
 }
 
 function hydrateDefinition(command) {
@@ -188,11 +146,12 @@ function hydrateExamples(command) {
     const examples = command.examples.map(e => (
         blockify(hydrateSymbols(command, e))
     )).join("\n")
-    return space("**EXAMPLES**", examples)
+    return space("Examples:", examples)
 }
 
 function hydrateDocstring(command) {
-    return space(hydrateSyntax(command), '', hydrateExamples(command))
+    const name = `**${command.command.toUpperCase()}**`
+    return space('---------', '',name, '', hydrateSyntax(command), '', hydrateExamples(command))
 }
 
 function hydrateError(command, message) {
@@ -201,8 +160,6 @@ function hydrateError(command, message) {
     return space(error, correct)
 }
 
-
-// Commands
 const help = {
     command: "help",
     description: "Get help on a command",
@@ -226,7 +183,9 @@ const help = {
             const c = findCommand(com)
             return hydrateDocstring(c)
         }
-        return commands.map(c => hydrateDefinition(c)).join("\n")
+        const manual = commands.map(c => hydrateDocstring(c)).join("\n")
+        msg.author.send(manual)
+        return "Sent you a DM with the manual"
     },
 }
 

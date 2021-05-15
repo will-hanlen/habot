@@ -4,37 +4,28 @@ const { stringifyGoal } = require('./util')
 const queryTemplate = `
 mutation createGoal(
     $user: String!,
-    $count: Int,
-    $name: String!,
-    $delim1: String,
-    $frequency: Int,
-    $interval: String,
-    $delim2: String!,
+    $count: Int!,
+    $activity: String!,
+    $interval: Int!,
     $end: timestamptz!,
     $start: timestamptz!,
 ) {
     insert_goal_one(object: {
         user: $user,
         count: $count
-        name: $name,
-        delim1: $delim1,
-        frequency: $frequency,
+        activity: $activity,
         interval: $interval,
-        delim2: $delim2,
         end: $end,
         start: $start,
     }) {
       user
-      name
+      activity
       interval
-      frequency
-      delim1
-      delim2
       end
       count
       start
       logs {
-        count
+        addend
         date
       }
     }
@@ -44,32 +35,33 @@ mutation createGoal(
 const set = {
     command: "set",
     regex: new RegExp([
-        '^(?<count>\\d+)? ?',
-        '(?<name>\\w+) ',
+        '^',
+        '"(?<activity>[A-Za-z0-9 ]+)" ',
         '(?:',
-        '(?<delim1>(?:every)|(?:per)) ',
-        '(?<frequency>\\d+)? ',
-        '?(?<interval>\\D+) ',
+          'x(?<count>[1-9]+) ',
         ')?',
-        '(?<delim2>\\w+) ',
+        '(?:',
+          'every ',
+          '(?<interval>[1-9]+)? ',
+          'days? ',
+        ')?',
+        '(?:',
+          'starting ',
+          '(?<start>\\d{4}-\\d{2}-\\d{2}) ?',
+        ')?',
+        'ending ',
         '(?<end>\\d{4}-\\d{2}-\\d{2}) ?',
-        '(?:starting (?<start>\\d{4}-\\d{2}-\\d{2}))?',
         '$'
     ].join('')),
     description: "Create a new repeating goal",
-    syntax: "!@ [COUNT] NAME [DELIM1 [FREQUENCY] INTERVAL] DELIM2 END [starting START]",
+    syntax: '!@ "ACTIVITY" [xCOUNT] [every [INTERVAL] day[s]] [starting START] ending END',
     legend: [
         "COUNT is a **number** of how many times you want to do NAME",
-        `NAME is a single **word** used to reference this goal. \n` +
-            `\t\t NAME should be a noun. \n` +
-            `\t\t if COUNT > 1, NAME should be plural`,
-        "DELIM1 is either '**every**', or '**per**'",
-        "FREQUENCY is a **number**",
-        `INTERVAL is either 'day', 'days', 'week', 'weeks', 'month', or ` +
-            `months'`,
-        `DELIM2 is either '**until**' or '**by**'`,
-        `END is a timestamp in the **YYYY-MM-DD** format`,
+        `ACTIVITY is a **phrase** used to reference this goal. \n` +
+            `\t\t it is the verb you want to count \n` +
+        `INTERVAL is the number of days you want in each interval` +
         `START is a timestamp in the **YYYY-MM-DD** format`,
+        `END is a timestamp in the **YYYY-MM-DD** format`,
     ],
     examples: [
         "!@ 50 pushups every day until 2022-01-01",
@@ -79,26 +71,20 @@ const set = {
     handler: async function(msg, args) {
 
         const {
-            count,
-            name,
-            frequency,
-            interval,
-            delim1,
-            delim2,
-            end,
+            activity,
+            count = 1,
+            interval = 1,
             start = new Date().toISOString(),
+            end,
         } = args
 
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
             "count": count,
-            "name": name,
-            "delim1": delim1,
-            "frequency": frequency,
+            "activity": activity,
             "interval": interval,
-            "delim2": delim2,
-            "end": end,
             "start": start,
+            "end": end,
         }, "createGoal")
 
         return stringifyGoal(apiResp['insert_goal_one'])

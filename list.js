@@ -7,17 +7,14 @@ query listGoals(
 ) {
     goal(where: { user: {_eq: $user }}) {
       user
-      name
+      activity
       interval
-      frequency
-      delim1
-      delim2
-      end
       count
       start
+      end
       logs {
         date
-        count
+        addend
       }
     }
   }

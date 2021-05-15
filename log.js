@@ -3,34 +3,31 @@ const { stringifyGoal } = require('./util')
 
 const queryTemplate = `
 mutation logProgress(
-  $count: Int!
+  $addend: Int!
   $date: timestamptz!
   $name: String!
   $user: String!
 ) {
   insert_log_one(object: {
-    count: $count,
+    addend: $addend,
     date: $date,
     name: $name,
     user: $user
   }) {
     date
-    count
+    addend
     user
     name
     goal {
-      name
       user
+      activity
       count
-      delim1
-      delim2
       interval
-      frequency
-      end
       start
+      end
       logs {
         date
-        count
+        addend
       }
     }
   }
@@ -41,15 +38,15 @@ const log = {
     command: "log",
     regex: new RegExp([
         '^',
-        '(?<count>\\d+)? ?',
+        '(?<addend>\\d+)? ?',
         '(?<name>\\w+) ?',
         '(?:on (?<date>\\d{4}-\\d{2}-\\d{2}))?',
         '$'
     ].join('')),
     description: "Log progress on a goal",
-    syntax: "!@ [COUNT] NAME [on DATE]",
+    syntax: "!@ [ADDEND] NAME [on DATE]",
     legend: [
-        "[COUNT] is the number of NAME that you did.  Defaults to 1.",
+        "[ADDEND] is the number of NAME that you did.  Defaults to 1.",
         "NAME is the name of the goal you made progress on",
         "[DATE] is the date when you made the progress. Defaults to today.",
     ],
@@ -61,7 +58,7 @@ const log = {
     handler: async function(msg, args) {
 
         const {
-            count = 1,
+            addend = 1,
             name,
             date = new Date().toISOString(),
         } = args
@@ -69,7 +66,7 @@ const log = {
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
             "name": name,
-            "count": count,
+            "addend": addend,
             "date": date,
         }, "logProgress")
 

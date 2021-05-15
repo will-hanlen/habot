@@ -3,14 +3,14 @@ const { stringifyGoal } = require('./util')
 
 const queryTemplate = `
 mutation deleteGoal(
-  $name: String!
+  $activity: String!
   $user: String!
 ) {
   delete_goal_by_pk(
-    name: $name,
+    activity: $activity,
     user: $user
   ) {
-    name
+    activity
   }
 }
 `;
@@ -19,13 +19,13 @@ const del = {
     command: "delete",
     regex: new RegExp([
         '^',
-        '(?<name>\\w+)',
+        '(?<activity>\\w+)',
         '$'
     ].join('')),
     description: "Delete a goal",
-    syntax: "!@ NAME",
+    syntax: "!@ ACTIVITY",
     legend: [
-        "NAME is the name of the goal you want to delete",
+        "ACTIVITY is the name of the goal you want to delete",
     ],
     examples: [
         "!@ pushups",
@@ -33,21 +33,21 @@ const del = {
     handler: async function(msg, args) {
 
         const {
-            name,
+            activity,
         } = args
 
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
-            "name": name,
+            "activity": activity,
         }, "deleteGoal")
 
         const deleted = apiResp['delete_goal_by_pk']
 
         if (!deleted) {
-            throw `Could not find a goal named ${name} to delete`
+            throw `Could not find a goal named ${activity} to delete`
         }
 
-        return `Deleted ${deleted.name}`
+        return `Deleted ${deleted.activity}`
 
 
     },
