@@ -39,7 +39,7 @@ const log = {
     regex: new RegExp([
         '^',
         '(?<addend>\\d+)? ?',
-        '(?<activity>\\w+) ?',
+        '(?<activity>[A-Za-z0-9 ]+) ?',
         '(?:on (?<date>\\d{4}-\\d{2}-\\d{2}))?',
         '$'
     ].join('')),

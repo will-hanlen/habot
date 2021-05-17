@@ -14,6 +14,7 @@ const { set } = require('./newGoal');
 const { list } = require('./list');
 const { log } = require('./log');
 const { del } = require('./delete');
+const { history } = require('./history');
 
 // Setup
 dotenv.config()
@@ -196,4 +197,5 @@ const commands = [
     list,
     log,
     del,
+    history,
 ]

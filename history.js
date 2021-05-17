@@ -2,30 +2,31 @@ const { APIcall } = require('./api')
 const { stringifyGoal } = require('./util')
 
 const queryTemplate = `
-mutation deleteGoal(
+query allLogs(
   $activity: String!
   $user: String!
 ) {
-  delete_goal_by_pk(
-    activity: $activity,
-    user: $user
-  ) {
-    activity
+  log(where: {
+    user: {_eq: $user},
+    activity: {_eq: $activity},
+  }) {
+    date,
+    addend
   }
 }
 `;
 
-const del = {
-    command: "delete",
+const history = {
+    command: "history",
     regex: new RegExp([
         '^',
         '(?<activity>[A-Za-z0-9 ]+)',
         '$'
     ].join('')),
-    description: "Delete a goal",
+    description: "All the logs of a goal",
     syntax: "!@ ACTIVITY",
     legend: [
-        "ACTIVITY is the name of the goal you want to delete",
+        "ACTIVITY is the name of the goal you want to inspect",
     ],
     examples: [
         "!@ pushups",
@@ -33,24 +34,28 @@ const del = {
     handler: async function(msg, args) {
 
         const {
-            activity,
+            activity
         } = args
 
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
             "activity": activity,
-        }, "deleteGoal")
+        }, "allLogs")
 
-        const deleted = apiResp['delete_goal_by_pk']
+        const logs = apiResp['log']
 
-        if (!deleted) {
-            throw `Could not find a goal named ${activity} to delete`
+        if (!logs) {
+            throw `Could not find a goal named ${activity}`
         }
 
-        return `Deleted ${deleted.activity}`
+        const output = logs.map(l => {
+            return `${l.addend}\t${l.date}`
+        }).join("\n")
+
+        return output
 
 
     },
 }
 
-module.exports = { del }
+module.exports = { history }
