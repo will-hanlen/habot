@@ -39,12 +39,12 @@ const log = {
     regex: new RegExp([
         '^',
         '(?<addend>\\d+)? ?',
-        '(?<activity>[A-Za-z0-9 ]+) ?',
+        '"(?<activity>[A-Za-z0-9 ]+)" ?',
         '(?:on (?<date>\\d{4}-\\d{2}-\\d{2}))?',
         '$'
     ].join('')),
     description: "Log progress on a goal",
-    syntax: "!@ [ADDEND] ACTIVITY [on DATE]",
+    syntax: `!@ [ADDEND] "ACTIVITY" [on DATE]`,
     legend: [
         "[ADDEND] is the number of NAME that you did.  Defaults to 1.",
         "ACTIVITY is the name of the goal you made progress on",

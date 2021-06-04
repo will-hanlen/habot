@@ -28,7 +28,7 @@ const del = {
         "ACTIVITY is the name of the goal you want to delete",
     ],
     examples: [
-        "!@ pushups",
+        '!@ pushups',
     ],
     handler: async function(msg, args) {
 

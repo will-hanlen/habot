@@ -37,26 +37,19 @@ const set = {
     regex: new RegExp([
         '^',
         '"(?<activity>[A-Za-z0-9 ]+)" ',
-        '(?:',
-          'x(?<count>[1-9]+) ',
-        ')?',
-        '(?:',
-          'every ',
-          '(?<interval>[1-9]+)? ',
-          'days? ',
-        ')?',
-        '(?:',
-          'starting ',
-          '(?<start>\\d{4}-\\d{2}-\\d{2}) ?',
-        ')?',
-        'ending ',
-        '(?<end>\\d{4}-\\d{2}-\\d{2}) ?',
+        'daily ',
+        'for ',
+        '(?<duration>[0-9][0-9]) ',
+        'weeks',
         '$'
     ].join('')),
     description: "Create a new repeating goal",
     syntax: '!@ "ACTIVITY" [xCOUNT] [every [INTERVAL] day[s]] [starting START] ending END',
     legend: [
-        "COUNT is a **number** of how many times you want to do NAME",
+        "Goals are tracked by counting the number of times you want to do something",
+        "Goals can be repeating or not",
+        "",
+        "COUNT is a **number** of how many times you want to do ACTIVITY",
         `ACTIVITY is a **phrase** used to reference this goal. \n` +
             `\t\t it is the verb you want to count \n` +
         `INTERVAL is the number of days you want in each interval` +
@@ -64,27 +57,24 @@ const set = {
         `END is a timestamp in the **YYYY-MM-DD** format`,
     ],
     examples: [
-        "!@ 50 pushups every day until 2022-01-01",
-        "!@ 4 meditations per week until 2022-01-01",
-        "!@ essay every 15 days until 2021-10-15",
+        '!@ "pushups" x50 every day ending 2022-01-01',
+        '!@ "meditate" every 7 days starting 2021-06-01 ending 2022-01-01',
+        '!@ "wake at 5am" every day ending 2021-10-15',
+        '!@ "miles ran" x15 every 15 days starting 2021-06-01 ending 2021-01-01',
     ],
     handler: async function(msg, args) {
 
         const {
             activity,
-            count = 1,
-            interval = 1,
-            start = new Date().toISOString(),
-            end,
+            frequency = 1,
+            duration,
         } = args
 
         const apiResp = await APIcall(queryTemplate, {
             "user": msg.author.id,
-            "count": count,
             "activity": activity,
-            "interval": interval,
-            "start": start,
-            "end": end,
+            "frequency": frequency,
+            "duration": duration,
         }, "createGoal")
 
         return stringifyGoal(apiResp['insert_goal_one'])

@@ -20,16 +20,16 @@ const history = {
     command: "history",
     regex: new RegExp([
         '^',
-        '(?<activity>[A-Za-z0-9 ]+)',
+        '"(?<activity>[A-Za-z0-9 ]+)"',
         '$'
     ].join('')),
     description: "All the logs of a goal",
-    syntax: "!@ ACTIVITY",
+    syntax: '!@ "ACTIVITY"',
     legend: [
         "ACTIVITY is the name of the goal you want to inspect",
     ],
     examples: [
-        "!@ pushups",
+        `!@ "pushups"`,
     ],
     handler: async function(msg, args) {
 
