@@ -1,0 +1,353 @@
+* How can members of digital community hold each other accountable to their goals?
+
+In real life, I find it much easier to stick to a goal if someone is
+keeping me accountable. Sometimes this is as simple as having a
+deadline. Sometimes a friend who is doing the same goal can keep me
+motivated and on track. Sometimes, simply talking about your goal
+publicly is enough.
+
+In a digital community, it's harder to see exactly what people are up
+to. There isn't a commonplace way to talk about goals or track them in
+the digital space where other people can easily interact with it.
+
+The closest thing is probably, just going on twitter and logging your
+progress.
+
+---
+
+My solution is to build a Discord bot through which members can set goals and publicly log progress.
+** Why Discord?
+Most online communities have a Discord server.  If this is a hub for a
+lot of the community's activity, it would be the perfect spot to share
+and track goals.
+
+Building Discord bots is relatively easy compared to building out a
+webapp which I think would be less effective anyway because it
+requires leaving the hub of interaction.
+
+
+
+** How do you represent goals and progress digitally?
+
+There are a lot of ways to set and think about goals:
+- New years resolutions
+- KPIs
+- daily and weekly habits
+
+I am going to be opinionated about which types of goals can be tracked through the bot for two reasons:
+
+1. A simpler interface
+
+   Becuase the bot's interface is a Discord text command, there has to be a way to represent a goal with a syntax.
+   The simpler that syntax, the easier the bot will be to learn and use.
+   To achieve a simple syntax, I have to be opinionated about what what is and isn't a goal.
+
+2. Better results
+
+   Good goal setting is hard to do. Poorly phrased goals lead to bad
+   results and demotivation. I believe being opinionated about what a
+   good goal is allows people to write better goals.
+
+*** What makes a good goal?
+
+**Good goals implement actions, not outcomes**
+
+**Good goals last between 4 and 13 weeks**
+
+**Good goals are unpinchable**
+
+**Good goals start right now**
+
+**Once a goal is set, it's immutable**
+
+**** How do you make goals actionable?
+
+Imagine that you are trying to get on top of your fitness this year.
+
+Your goal might be to weigh 200 lbs by the end of the year.
+
+I think this is a bad goal.
+
+Sure, it's a great starting point for a goal, but it's not very
+actionable.  Nothing in the goal tells you how to get it done because
+it only focuses on the outcome.
+
+A goal about outcomes really isn't a goal, it's a vision of what you
+want to be.  Having a vision is important to guide your goal setting,
+but good goals focus on the "how" and not the "what" of your vision.
+
+Here's a better version of a fitness goal:
+- row for 45mins, 3 times a week, until next month
+- eat only a paleo diet every day, until next month
+
+These new goals are unambiguous and actionable. You should always know
+exactly what you should be doing.
+
+In the end, we can only control our effort of our actions, not the
+outcomes - so focus on making your goals as specifically action
+focused as possible.
+
+**** How do you choose the right goal length?
+
+If a goal never has an end date, it looses it's urgency.
+
+I think a full year is too long for a goal. Who actually finished their New Year's resolutions?
+
+We just can't predict the future well enought to know what our lives will be like in a year.
+
+I think the longest any goal should be is 13 weeks. That's a fourth of
+a year. One season.
+
+That's long enough that you can make significant progress, but not
+long enough to be hindered by a long commitment or inflexibility.
+
+If things are going well with the goal, you can always extend it for
+longer once it's done.
+
+The shortest a goal should be is 4 weeks. Any shorter and you don't
+really know if you've gotten anywhere and you probably didn't grow much.
+
+Real growth takes time.
+
+Choose between 4 and 13 weeks by looking at how out of your comfort
+zone the activity is.
+
+If you the goal is ambitiously outside of your comfort zone, experiment with just a month long goal. See how you like it, then re-evaluate.
+
+If the activity is something you know you should be doing but you are just lacking consistency, set a goal to do it for a whole 13 week season.
+
+**** What is "goal pinching" and why should I avoid it?
+
+Say I have a goal to workout 15 days of this month.
+
+I workout every day for the first week but I start slowing down.
+
+I justify this because I know that I'm ahead of progress for the month.
+
+Although progress slowed, I still work out every few days.
+
+But the end of the month creeps up and I find myself 1 week away from
+the end of the month, but with 10 workouts left.
+
+Damnit! I was doing so well at the beginning and now I've
+failed. There's now no way I can succeed at the goal because there are
+more days of workouts than days left in the month.
+
+So I now have 3 options:
+- Ignore the fact that I've already failed at what I set out to do and keep making progress
+- Quit the goal early and make a new one
+- Stop making progress because I've already failed and wait til the end of the month to make a new goal
+
+None of these options are great.
+
+The problem with my goal was that if I wasn't looking forward into the future and counting the number of days left in the goal, I might end up getting "pinched".
+
+The solution to "goal pinching" is phrase goals so that you never need
+to look forward in the calendar in order to know whether you need to
+workout today.
+
+Always look backwards.
+
+The original goal rephrased to be bakwards-looking is: "Never take more than one day off from working out".
+
+You never have to look into the future, you just have to remember if you worked out yesterday, and if not, then you must workout today.
+
+This is also known as the [[https://www.youtube.com/watch?v=bfLHTLQZ5nc][Two Day Rule]].
+
+If you were perfect in your goal, you would end up working out a minimum of 15 times a month.
+If you miss a day or even a week, it only affects your success retrospectivly, never your ability to continue with the goal in the future.
+
+You can always just pick it right back up and start making progress.
+
+Another example of an unpinchable goal is: "read in 2 of the last 7 days".
+
+This works if you are always implementing actions and enver outcomes.
+
+
+*** What are the different parts of a good goal?
+
+Here are two examples of good goals:
+- Do 45 pushups every day for 6 weeks
+- Don't smoke for 8 weeks
+- Meditate at least 3/4 of days for 10 weeks
+
+These can be broken down into components.
+
+- A clear action
+- The maximum or minimum fraction of days on which this action should be taken
+- An end-date
+
+*** How to represent anti-goals
+Allow for counting to be a bad things. Still count up.
+*** How to track goal progress?
+*** What are the different states of a goal?
+*** What is the data model?
+
+** How do you interface with goals and progress through Discord?
+Upsert, Read, and Delete
+
+** How do you make it easy to learn the interface?
+Manual DM'ed to you when you mess up.
+Lots of examples.
+Slash Commands.
+
+** How can we recognize and celebrate accomplishments together?
+
+** Old
+*** Motivation
+
+My friend Jake and I are working on building an online community
+around the ideas of our business [[https://liveineverynow.com][LIVEINEVERYNOW]].
+
+The mission of the company is to "give people the tools to live
+happier, healthier, more present lives." A community built around that
+mission is one in which members push each other to be happier,
+healthier, and more present.
+
+In a many ways, the tools available to an online community limit what
+the community can do. "The medium is the message"[fn:1]. More powerful
+mediums with more powerful tools can transfer more powerful messages.
+
+I see an opportunity in the online community space to build a tool
+which makes it easy for communities to make its members better
+through public goal setting.
+*** Objective
+
+The goal of this project is to:
+
+Create an interface through which members of an online community can
+publicly set goals, publicly logs progress to those goals, be
+motivated and held accountable by each other, and celebrate
+accomplishments together.
+*** Platform
+
+I wanted to integrate goal setting directly into our community's
+Discord server to make it as friction-less as possible for people to
+use.
+
+For this project I think a Discord bot is a better interface than an app or
+a webpage because people don't have to do go anywhere they aren't
+already going.
+
+The social aspect of Discord also makes holding each other accountable fun.
+
+Luckily for me, building Discord bots is pretty straightforward and
+very well documented.
+*** Anatomy of a goal
+
+The most interesting part of this project for me was working through
+how to represent as many different goals types as possible with a
+single syntax.
+
+My desire for a single syntax was mostly born from the desire to have
+a single data model for tracking all goals.
+
+I also wanted users to be able to write goals in a semi-natural way.
+
+At first I didn't know if it was going to be possible; there are lots
+of different kinds of goals
+
+There are goals that only include a single action:
+- Climb Mount Everest
+
+There are goals in which you have to count actions by time intervals:
+- Every 3 weeks, write and publish 2 essays
+
+There are goals in which you have to count actions but there are no
+intervals:
+- Try 50 new recipes
+
+There are goals where progress is in-action:
+- Don't eat sugar this month
+
+My solution was to force all goals into this syntax:
+- Every goal is represented by counting a number of actions
+- The action of the the goal (a verb usually) is the name of the goal
+- Every goal has a start and end date
+- Goals have an optional repeating interval clause which contains a
+  length and optional multiplier.
+
+Here are the above goals rewritten in the standarized syntax:
+- "climb Everest" ending 2022-05-14
+- "find new recipe" x50 ending 2022-05-14
+- "eat no sugar" every day ending 2022-05-14
+- "publish essay" x2 every 21 days ending 2022-01-01
+
+Here's the final command syntax documentation.
+
+!set "ACTIVITY" [xCOUNT] [every [N] day[s]] [starting START] ending END
+*** Communicating Progress
+*** 2 Data Models
+
+The MVP implementation of this idea is pretty simple.
+
+There are only two necessary data models: one for storing goal details and
+one for storing progress.
+
+I don't even need a user model because everybody is already logged
+into Discord!
+
+Below is a more in-depth look at the two data models:
+
+Goal: Stores the details of a single goal
+- user
+- activity
+- count
+- interval
+- start
+- end
+- primary key: [user + activity]
+
+Log: Stores progress towards a goal
+- user: the Discord user's ID
+- activity: the goal you are progressing towards
+- date: timestamp
+- addend: the amount of progress you made
+- primary key: [user + activity + date]
+*** 8 Commands
+
+The only commands I implemented in MVP were CRUD operations for the
+two data models.
+
+Here is a demo interaction using all the commands:
+*** Future Improvements
+*** Lessons Learned
+**** Parsing text is annoying
+
+Regex is hard to write. If a user enters in a bad command and the
+regex fails, giving feedback about which part of the command was wrong
+is hard if you only have a single regex to match the command with.
+
+I really should have used a community package for this. There's even
+one provided by the discordjs team called Commando but I didn't do
+enough research before diving into the coding and solving it poorly
+myself.
+**** Enforce model constraints at the db level or command level?
+Where to check for errors
+**** Naming things is hard
+I could have named this bot "Goal Accountability Bot", but holy fuck
+that's even more boring than goal setting in the first place. I wanted
+it to be whimsical and interesting, or at least not boring.
+
+Building worlds as a business is a way to get people to care about
+what you are building. People always connect with narrative. It's hard
+to build a narrative around boring, lifeless ideas. Naming ideas well
+leads to good narratives and thus leads to people caring what you have
+to say.
+
+I have a running joke with friends that I'm going to name all my pets
+ever "Robot". I got this from the dog name Robot who discovered the
+ancient Lascaux cave paintings[fn:2]. I just think a dog named robot
+is so funny, but since I don't have a dog, I considered naming this
+bot "Robot". But it's much less funny when the thing you're naming
+"Robot" is a robot.
+
+I eventually decided to go with PAT, standing for Public
+Accountability Tool. It's honestly still a really boring name, but
+it's short, related to what it does, and at least slightly
+anthropomorphous.
+*** Footnotes
+[fn:1] https://en.wikipedia.org/wiki/The_medium_is_the_message
+[fn:2] https://www.thecollector.com/how-did-a-dog-discover-the-lascaux-cave-paintings/
+
+

@@ -1,6 +1,10 @@
 const { APIcall } = require('./api')
 
-function stringifyGoal(data) {
+function stringifyGoal(name, type, start, duration, logs) {
+    return `**${name}** ${type} for ${duration} weeks`
+}
+
+function sstringifyGoal(data) {
 
     const user = data.user
     const activity = `**${data.activity}** `
