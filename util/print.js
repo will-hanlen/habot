@@ -3,7 +3,8 @@ const { APIcall } = require('./api')
 function stringifyGoal(name, type, start, duration, logs) {
     const summary = summaryLine(name, type, duration)
     const progress = progressLine(type, logs, duration)
-    return `${summary}\n${progress}`
+    const remaining = daysLeft(duration, start)
+    return `${summary}\n${progress} \n${remaining} days remaining\n`
 }
 
 function progressLine(type, logs, duration) {
@@ -11,10 +12,21 @@ function progressLine(type, logs, duration) {
     const maxDays = duration * 7
 
     if (type == 'daily') {
-        return `${numLogs} / ${maxDays}`
+        return `(${numLogs} / ${maxDays})`
     }
 
     return `Broken ${numLogs} times`
+}
+
+function daysLeft(duration, start) {
+    const sDate = new Date(start)
+    var eDate = new Date(sDate)
+    var today = new Date()
+
+    eDate.setDate(eDate.getDate() + (7 * duration));
+
+    const msLeft = Math.abs(eDate - today);
+    return Math.floor(msLeft / (24 * 60 * 60 * 1000))
 }
 
 function summaryLine(name, type, duration) {
