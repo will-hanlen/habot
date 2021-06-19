@@ -163,6 +163,9 @@ Another example of an unpinchable goal is: "read in 2 of the last 7 days".
 
 This works if you are always implementing actions and enver outcomes.
 
+**** Contingency Plan
+What are the obstacles you will face?
+How will you deal with them when you face them.
 
 *** What are the different parts of a good goal?
 

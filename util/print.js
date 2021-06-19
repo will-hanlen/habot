@@ -1,6 +1,23 @@
 const { APIcall } = require('./api')
 
 function stringifyGoal(name, type, start, duration, logs) {
+    const summary = summaryLine(name, type, duration)
+    const progress = progressLine(type, logs, duration)
+    return `${summary}\n${progress}`
+}
+
+function progressLine(type, logs, duration) {
+    const numLogs = logs.length
+    const maxDays = duration * 7
+
+    if (type == 'daily') {
+        return `${numLogs} / ${maxDays}`
+    }
+
+    return `Broken ${numLogs} times`
+}
+
+function summaryLine(name, type, duration) {
     return `**${name}** ${type} for ${duration} weeks`
 }
 
