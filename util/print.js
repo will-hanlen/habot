@@ -25,7 +25,7 @@ function daysLeft(duration, start) {
 
     eDate.setDate(eDate.getDate() + (7 * duration));
 
-    const msLeft = Math.abs(eDate - today);
+    const msLeft = eDate - today
     return Math.floor(msLeft / (24 * 60 * 60 * 1000))
 }
 
