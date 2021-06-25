@@ -3,7 +3,11 @@ const { APIcall } = require('./api')
 function stringifyGoal(name, type, start, duration, logs) {
     const summary = summaryLine(name, type, duration)
     const progress = progressLine(type, logs, duration)
-    const remaining = daysLeft(duration, start)
+    var remaining = daysLeft(duration, start)
+
+    if (remaining < 1) {
+        return `${summary}\n${progress} \nFinished!\n`
+    }
     return `${summary}\n${progress} \n${remaining} days remaining\n`
 }
 
@@ -154,4 +158,4 @@ function progressMeter(goal) {
     return `\t${done}/${needed} completed` + timeLeft
 }
 
-module.exports = { stringifyGoal }
+module.exports = { stringifyGoal, daysLeft }

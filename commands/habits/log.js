@@ -1,5 +1,5 @@
 const { APIcall } = require('../../util/api')
-const { stringifyGoal } = require('../../util/print')
+const { stringifyGoal, daysLeft } = require('../../util/print')
 const { encodeNow } = require('../../util/date')
 const { Command } = require('discord.js-commando');
 
@@ -31,11 +31,13 @@ query checkExistingGoal(
   $name: String!
   $user: String!
 ) {
-  log(where: {
-    name: {_eq: $name}
-    user: {_eq: $user}
-  }) {
+  goal_by_pk(
+    name: $name
+    user: $user
+  ) {
     name
+    duration
+    start
   }
 }
 
@@ -83,20 +85,36 @@ module.exports = class LogCommand extends Command {
     }
 
     run(message, { name }) {
-        const vars = {
+        var vars = {
             "user": message.author.id,
             "name": name,
-            "date": encodeNow(),
         }
 
-        APIcall(queryTemplate, vars, "checkExistingLog")
-            .then(data => {
-                // If there isn't already a log today, create one
-                if (!data.log_by_pk) return this.createLog(message, vars)
+	APIcall(queryTemplate, vars, "checkExistingGoal")
+	    .then(data => {
+		const goal = data.goal_by_pk
+		const dl = daysLeft( goal.duration, goal.start)
+		if (dl > 0) {
+		    vars = {
+			"user": message.author.id,
+			"name": name,
+			"date": encodeNow(),
+		    }
 
-                // Return that today already has a log
-                message.say(`**${name}** already has already been logged today`)
-            })
+		    return APIcall(queryTemplate, vars, "checkExistingLog")
+			.then(data => {
+			    // If there isn't already a log today, create one
+			    if (!data.log_by_pk) {
+				return this.createLog(message, vars)
+			    }
+
+			    // Return that today already has a log
+			    message.say(`**${name}** already has already been logged today`)
+			})
+		}
+		message.say(`**${goal.name}** is finished.`)
+	    })
+
     }
 
     createLog(message, vars) {
