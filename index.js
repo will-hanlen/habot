@@ -18,7 +18,7 @@ dotenv.config()
 
 // Init the Commando Client
 const client = new CommandoClient({
-    commandPrefix: '!',
+    commandPrefix: 'habot',
     owner: '392171266292973569',  // That's me
 });
 
