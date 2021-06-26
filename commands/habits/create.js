@@ -75,7 +75,14 @@ module.exports = class MeowCommand extends Command {
             vars,
             "createHabit"
         ).then(data => {
-            message.say(`${message.author} created a habit:\n**${name}** ${type} for ${duration} weeks!`)
+            message.say(
+		`${message.author} created a habit:\n` +
+		`**${name}** ${type} for ${duration} weeks!\n\n` +
+		`To maximize the effectiveness of this habit, send a message explaining:\n` +
+		`- why you are starting this habit\n` +
+		`- 2 or 3 obstacles you know will hinder your success ` +
+		`and how you plan to deal with them`
+	    )
         }).catch(error => {
             if (error.includes("goal_pkey")) {
                 message.say(`Error: You already have a habit called **${name}**`)
